@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Cadastro</title>
-    <link rel="stylesheet" href="../views/public/auth.css">
+    <link rel="stylesheet" href="/ProjetoTalents/public/css/auth.css">
 </head>
 <body>
     <?php
@@ -29,7 +29,7 @@
 
     <div class="container" id="container">
         <div class="form-container sign-up-container">
-            <form action="../app/controllers/CadastroController.php" method="POST">
+            <form action="../controllers/CadastroController.php" method="POST">
                 <h1>Criar Conta</h1>
                 <span>ou use seu e-mail para registrar</span>
                 <input type="text" placeholder="Nome" name="nome" required />
@@ -46,7 +46,7 @@
         </div>
 
         <div class="form-container sign-in-container">
-            <form action="../app/controllers/LoginController.php" method="POST">
+            <form action="../controllers/LoginController.php" method="POST">
                 <h1>Entrar</h1>
                 <span>ou use sua conta</span>
                 <input type="email" placeholder="Email" name="email" required />
@@ -72,6 +72,6 @@
         </div>
     </div>
 
-    <script src="../views/public/js/auth.js"></script>
+    <script src="/ProjetoTalents/public/js/auth.js"></script>
 </body>
 </html>

@@ -1,31 +1,35 @@
 <?php
 
-require_once __DIR__ . "/../../config/config.php";
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../models/User.php';
 session_start();
 
-if ($_SERVER["REQUEST_METHOD"] = "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $senha = $_POST['senha'];
+    $userModel = new User($conn);
+    $usuario = $userModel->findByEmail($email);
 
-    try {
-        $stmt = $conn->prepare("SELECT id, email, senha. tipo_usuario FROM usuario WHERE email = ?");
-        $stmt->execute([$email]);
-        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($usuario && password_verify($senha, $usuario['senha'])) {
+        $_SESSION['usuario_id'] = $usuario['id'];
+        $_SESSION['usuario_nome'] = $usuario['nome'];
+        $_SESSION['usuario_tipo'] = $usuario['tipo_usuario'];
 
-        if($usuario && password_verify($senha, $usuario['senha'])) {
-            $_SESSION['usuario_id'] = $usuario['id'];
-            $_SESSION['usuario_email'] = $usuario['email'];
-            $_SESSION['usuario_tipo'] = $usuario['tipo_usuario'];
-            echo "Login bem-sucedido! Bem-vindo, " . $usuario['nome'] . "!";
-        } else {
-            echo "Email ou senha incorreta.";
+        if ($usuario['tipo_usuario'] == 'candidato') {
+            header("Location: /ProjetoTalents/app/views/painel_candidato.php");
+        } elseif ($usuario['tipo_usuario'] == 'empresa') {
+            header("Location: /ProjetoTalents/app/views/painel_empresa.php");
+        } elseif ($usuario['tipo_usuario'] == 'admin') {
+            header("Location: /ProjetoTalents/app/views/painel_admin.php");
         }
-        $_SESSION['login_sucesso'] = "Login bem-sucedido! Bem-vindo, " . $usuario['nome'] . "!";
-        header("Location: /projeto_rh/views/auth.php");
+        
         exit();
-    } catch (PDOException $e) {
-        $_SESSION['login_erro'] = "Email ou senha incorretos.";
-        header("Location: /projeto_rh/views/auth.php");
+    } else {
+        $_SESSION['login_erro'] = "Email ou senha incorreto.";
+        header("Location: /ProjetoTalents/app/views/auth.php");
         exit();
     }
+} else {
+    header("Location: /ProjetoTalents/app/views/auth.php");
+    exit();
 }
